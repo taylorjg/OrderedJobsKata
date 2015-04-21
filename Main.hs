@@ -1,6 +1,10 @@
-import OrderedJobsKata (thing)
+import OrderedJobsKata (orderJobs)
 
 main :: IO ()
-main = 
+main =
     do
-        putStrLn $ thing
+        putStr $ "Enter jobs: "
+        input <- getLine
+        putStrLn $ "You entered: " ++ input
+        let output = orderJobs input
+        putStrLn $ "Ordered jobs: " ++ output

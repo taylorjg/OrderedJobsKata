@@ -1,12 +1,28 @@
 import Test.HUnit
 import System.Exit (exitFailure)
-import OrderedJobsKata (thing)
+import OrderedJobsKata
 
-testTest1 = TestCase $ do
-    assertEqual "thing is correct" "Hello from OrderedJobsKata" thing
+testEmptyString = TestCase $ do
+    assertEqual "unexpected output" "" $ orderJobs ""
+
+testSingleJob = TestCase $ do
+    assertEqual "unexpected output" "a" $ orderJobs "a =>"
+
+testMultipleJobs = TestCase $ do
+    let a = "a =>"
+    let b = "b =>"
+    let c = "c =>"
+    let input = unlines [a,b,c]
+    let output = orderJobs input
+    assertBool "expected output to contain a" $ 'a' `elem` output
+    assertBool "expected output to contain b" $ 'b' `elem` output
+    assertBool "expected output to contain c" $ 'c' `elem` output
+    assertEqual "expected output to have a length of 3" 3 $ length output
 
 tests = TestList [
-        TestLabel "testTest1" testTest1
+        TestLabel "testEmptyString" testEmptyString,
+        TestLabel "testSingleJob" testSingleJob,
+        TestLabel "testMultipleJobs" testMultipleJobs
     ]
 
 main :: IO ()

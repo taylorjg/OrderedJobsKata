@@ -1,4 +1,11 @@
-module OrderedJobsKata (thing) where
+module OrderedJobsKata (orderJobs) where
 
-thing :: String
-thing = "Hello from OrderedJobsKata"
+import Data.List.Split (wordsBy)
+
+orderJobs :: String -> String
+orderJobs "" = ""
+orderJobs s =
+    concat $ map (!!0) js2
+    where
+        js1 = lines s
+        js2 = map (wordsBy (==' ')) js1
