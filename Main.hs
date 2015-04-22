@@ -4,7 +4,7 @@ main :: IO ()
 main =
     do
         putStr $ "Enter jobs: "
+        -- TODO: allow multiple lines to be entered - loop until a blank line is seen
         input <- getLine
-        putStrLn $ "You entered: " ++ input
         let output = orderJobs input
         putStrLn $ "Ordered jobs: " ++ output
