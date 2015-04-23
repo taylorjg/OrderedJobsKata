@@ -6,16 +6,17 @@ import Data.List (sortBy, partition)
 orderJobs :: String -> String
 orderJobs [] = []
 orderJobs s =
-    concat letters
+    sortedletters
     where
-        jsLines = lines s
-        jsLinesInBits = map (wordsBy (==' ')) jsLines
-        listsOf2 = filter (\xs -> length xs == 2) jsLinesInBits
-        listsOf3 = filter (\xs -> length xs == 3) jsLinesInBits
+        jobLines = lines s
+        jobLinesSplit = map (wordsBy (==' ')) jobLines
+        listsOf2 = filter (\xs -> length xs == 2) jobLinesSplit
+        listsOf3 = filter (\xs -> length xs == 3) jobLinesSplit
         singles = map head listsOf2
         pairs = map (\xs -> (head xs, last xs)) listsOf3
         sortedPairs = sortPairs pairs []
-        letters = singles ++ (map fst sortedPairs)
+        firstsOfSortedPairs = map fst sortedPairs
+        sortedletters = concat $ singles ++ firstsOfSortedPairs
         sortPairs [] acc = acc
         sortPairs ps acc =
             let
