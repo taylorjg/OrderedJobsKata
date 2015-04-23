@@ -4,9 +4,9 @@ import Data.List.Split (wordsBy)
 import Data.List (sortBy)
 
 orderJobs :: String -> String
-orderJobs "" = ""
+orderJobs [] = []
 orderJobs s =
-    concat $ map (!!0) js3
+    concat $ map head js3
     where
         js1 = lines s
         js2 = map (wordsBy (==' ')) js1

@@ -6,12 +6,15 @@ import OrderedJobsKata
 
 testEmptyString = TestCase $ do
     let input = ""
-    assertEqual "unexpected output" "" $ orderJobs input
+    let output = orderJobs input
+    
+    assertExpectedOutput "" output
 
 testSingleJob = TestCase $ do
     let input = "a =>"
     let output = orderJobs input
-    assertEqual "unexpected output" "a" $ orderJobs input
+
+    assertExpectedOutput "a" output
 
 testMultipleJobs = TestCase $ do
     let a = "a =>"
@@ -19,10 +22,8 @@ testMultipleJobs = TestCase $ do
     let c = "c =>"
     let input = unlines [a,b,c]
     let output = orderJobs input
-    assertBool "expected output to contain a" $ 'a' `elem` output
-    assertBool "expected output to contain b" $ 'b' `elem` output
-    assertBool "expected output to contain c" $ 'c' `elem` output
-    assertEqual "expected output to have a length of 3" 3 $ length output
+
+    assertExpectedOutput "abc" output
 
 testMultipleJobsSingleDependency = TestCase $ do
     let a = "a =>"
@@ -30,6 +31,9 @@ testMultipleJobsSingleDependency = TestCase $ do
     let c = "c =>"
     let input = unlines [a,b,c]
     let output = orderJobs input
+
+    assertExpectedOutput "acb" output
+
     let mb = findIndex (=='b') output
     let mc = findIndex (=='c') output
     if isJust mb && isJust mc then
@@ -47,6 +51,17 @@ tests = TestList [
         TestLabel "testMultipleJobs" testMultipleJobs,
         TestLabel "testMultipleJobsSingleDependency" testMultipleJobsSingleDependency
     ]
+
+assertExpectedOutput expectedOutput actualOutput =
+    let
+        expectedLength = length expectedOutput
+        actualLength = length actualOutput
+        msg1 = "expected length of '" ++ actualOutput ++ "' to be the same as the length of '" ++ expectedOutput ++ "'"
+        msg2 = "expected all elements of '" ++ expectedOutput ++ "' to be present in '" ++ actualOutput ++ "'"
+    in
+        do
+            assertEqual msg1 expectedLength actualLength
+            assertBool msg2 $ all (flip elem actualOutput) expectedOutput
 
 main :: IO ()
 main =
