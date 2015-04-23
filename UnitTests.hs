@@ -28,7 +28,7 @@ testMultipleJobsSingleDependency = TestCase $ do
     let c = "c =>"
     let input = unlines [a,b,c]
     let output = orderJobs input
-    assertOutputContains output "acb"
+    assertOutputContains output "abc"
     assertCharAppearsBeforeChar output 'c' 'b'
 
 testMultipleJobsMultipleDependencies = TestCase $ do
