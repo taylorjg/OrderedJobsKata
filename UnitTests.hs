@@ -1,7 +1,7 @@
 import Test.HUnit
 import System.Exit (exitFailure)
 import Data.List (findIndex)
-import Data.Maybe (isJust, fromJust)
+import Data.Maybe (isJust, isNothing, fromJust)
 import OrderedJobsKata
 
 testEmptyString = TestCase $ do
@@ -46,6 +46,13 @@ testMultipleJobsMultipleDependencies = TestCase $ do
     assertCharAppearsBeforeChar output 'b' 'e'
     assertCharAppearsBeforeChar output 'a' 'd'
 
+testMultipleJobsSelfReferencingDependency = TestCase $ do
+    let a = "a =>"
+    let b = "b =>"
+    let c = "c => c"
+    let input = unlines [a,b,c]
+    assertBool "Expected orderJobs to return Nothing" $ isNothing (orderJobs input)
+
 assertOutputContains actualOutput chars =
     let
         actualOutputLength = length actualOutput
@@ -77,7 +84,8 @@ tests = TestList [
         TestLabel "testSingleJob" testSingleJob,
         TestLabel "testMultipleJobs" testMultipleJobs,
         TestLabel "testMultipleJobsSingleDependency" testMultipleJobsSingleDependency,
-        TestLabel "testMultipleJobsMultipleDependencies" testMultipleJobsMultipleDependencies
+        TestLabel "testMultipleJobsMultipleDependencies" testMultipleJobsMultipleDependencies--,
+        --TestLabel "testMultipleJobsSelfReferencingDependency" testMultipleJobsSelfReferencingDependency
     ]
 
 main :: IO ()

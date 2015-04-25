@@ -6,7 +6,10 @@ import Data.List (sortBy, partition)
 orderJobs :: String -> Maybe String
 orderJobs [] = Just []
 orderJobs s =
-    Just sortedletters
+    -- There is probably a nicer way to express this...
+    if pairsContainCycle pairs
+        then Nothing
+        else Just sortedletters
     where
         jobLines = lines s
         jobLinesSplit = map (wordsBy (==' ')) jobLines
@@ -14,13 +17,16 @@ orderJobs s =
         listsOf3 = filter (\xs -> length xs == 3) jobLinesSplit
         singles = map head listsOf2
         pairs = map (\xs -> (head xs, last xs)) listsOf3
-        sortedPairs = sortPairs pairs []
+        sortedPairs = sortPairs pairs
         firstsOfSortedPairs = map fst sortedPairs
         sortedletters = concat $ singles ++ firstsOfSortedPairs
-        sortPairs [] acc = acc
-        sortPairs ps acc =
-            let
-                firsts = map fst ps
-                (as, bs) = partition (\p -> (snd p) `elem` firsts) ps
-            in
-                sortPairs as (acc ++ bs)
+        sortPairs ps =
+            loop ps []
+            where
+                loop [] acc = acc
+                loop ps acc =
+                    loop as (acc ++ bs)
+                    where
+                        firsts = map fst ps
+                        (as, bs) = partition (\p -> (snd p) `elem` firsts) ps
+        pairsContainCycle ps = False
