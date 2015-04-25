@@ -20,31 +20,26 @@ orderJobs s =
         firstsOfSortedPairs = map fst sortedPairs
         sortedletters = concat $ singles ++ firstsOfSortedPairs
 
-        sortPairs ps =
-            loop ps []
+sortPairs ps =
+    loop ps []
+    where
+        loop [] acc = acc
+        loop ps acc =
+            loop as (acc ++ bs)
             where
-                loop [] acc = acc
-                loop ps acc =
-                    loop as (acc ++ bs)
-                    where
-                        firsts = map fst ps
-                        (as, bs) = partition (\p -> (snd p) `elem` firsts) ps
+                firsts = map fst ps
+                (as, bs) = partition (\p -> (snd p) `elem` firsts) ps
 
-        pairsContainCycle ps =
-            let
-                seconds = map snd ps
-                cycleFlags = map findCycle seconds
-                findCycle x =
-                    loop x []
-                    where
-                        loop x seenList =
-                            let
-                                seenList' = x:seenList
-                                ps' = filter (\p -> fst p == x) ps
-                                seconds' = map snd ps'
-                            in
-                                case seconds' of
-                                    [] -> False
-                                    y:_ -> y `elem` seenList' || loop y seenList'
-            in 
-                or cycleFlags
+pairsContainCycle ps =
+    or $ map (\s -> checkForCycle s ps) (map snd ps)
+
+checkForCycle s ps =
+    loop s []
+    where
+        loop s seenList =
+            case snds of
+                [] -> False
+                s':_ -> s' `elem` seenList' || loop s' seenList'
+            where
+                seenList' = s:seenList
+                snds = map snd (filter (\p -> fst p == s) ps)
