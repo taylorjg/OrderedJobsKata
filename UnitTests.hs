@@ -84,8 +84,8 @@ tests = TestList [
         TestLabel "testSingleJob" testSingleJob,
         TestLabel "testMultipleJobs" testMultipleJobs,
         TestLabel "testMultipleJobsSingleDependency" testMultipleJobsSingleDependency,
-        TestLabel "testMultipleJobsMultipleDependencies" testMultipleJobsMultipleDependencies--,
-        --TestLabel "testMultipleJobsSelfReferencingDependency" testMultipleJobsSelfReferencingDependency
+        TestLabel "testMultipleJobsMultipleDependencies" testMultipleJobsMultipleDependencies,
+        TestLabel "testMultipleJobsSelfReferencingDependency" testMultipleJobsSelfReferencingDependency
     ]
 
 main :: IO ()

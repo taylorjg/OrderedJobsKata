@@ -29,4 +29,21 @@ orderJobs s =
                     where
                         firsts = map fst ps
                         (as, bs) = partition (\p -> (snd p) `elem` firsts) ps
-        pairsContainCycle ps = False
+        pairsContainCycle ps =
+            let
+                seconds = map snd ps
+                cycleFlags = map findCycle seconds
+                findCycle x =
+                    let
+                        seenList = [x]
+                        ps' = filter (\p -> fst p == x) ps
+                        seconds' = map snd ps'
+                    in
+                        -- PointA:
+                        -- if any of seconds' is in seen list then we have a cycle
+                        -- otherwise, add all seconds' to seen list
+                        -- go back to PointA
+                        -- False
+                        any (\s -> s `elem` seenList) seconds'
+            in 
+                or cycleFlags
