@@ -3,10 +3,10 @@ module OrderedJobsKata (orderJobs) where
 import Data.List.Split (wordsBy)
 import Data.List (sortBy, partition)
 
-orderJobs :: String -> String
-orderJobs [] = []
+orderJobs :: String -> Maybe String
+orderJobs [] = Just []
 orderJobs s =
-    sortedletters
+    Just sortedletters
     where
         jobLines = lines s
         jobLinesSplit = map (wordsBy (==' ')) jobLines

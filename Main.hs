@@ -1,4 +1,5 @@
 import OrderedJobsKata (orderJobs)
+import Data.Maybe (fromJust)
 
 getLines :: IO [String]
 getLines = loop []
@@ -13,8 +14,8 @@ getLines = loop []
 main :: IO ()
 main =
     do
-        putStr $ "Enter jobs (blank line to end input): "
+        putStrLn $ "Enter jobs (blank line to end input): "
         lines <- getLines
         let input = unlines lines
-        let output = orderJobs input
+        let output = fromJust $ orderJobs input
         putStrLn $ "Ordered jobs: " ++ output

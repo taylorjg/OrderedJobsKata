@@ -6,12 +6,12 @@ import OrderedJobsKata
 
 testEmptyString = TestCase $ do
     let input = ""
-    let output = orderJobs input
+    let output = fromJust $ orderJobs input
     assertOutputContains output "" 
 
 testSingleJob = TestCase $ do
     let input = "a =>"
-    let output = orderJobs input
+    let output = fromJust $ orderJobs input
     assertOutputContains output "a"
 
 testMultipleJobs = TestCase $ do
@@ -19,7 +19,7 @@ testMultipleJobs = TestCase $ do
     let b = "b =>"
     let c = "c =>"
     let input = unlines [a,b,c]
-    let output = orderJobs input
+    let output = fromJust $ orderJobs input
     assertOutputContains output "abc"
 
 testMultipleJobsSingleDependency = TestCase $ do
@@ -27,7 +27,7 @@ testMultipleJobsSingleDependency = TestCase $ do
     let b = "b => c"
     let c = "c =>"
     let input = unlines [a,b,c]
-    let output = orderJobs input
+    let output = fromJust $ orderJobs input
     assertOutputContains output "abc"
     assertCharAppearsBeforeChar output 'c' 'b'
 
@@ -39,7 +39,7 @@ testMultipleJobsMultipleDependencies = TestCase $ do
     let e = "e => b"
     let f = "f =>"
     let input = unlines [a,b,c,d,e,f]
-    let output = orderJobs input
+    let output = fromJust $ orderJobs input
     assertOutputContains output "abcdef"
     assertCharAppearsBeforeChar output 'f' 'c'
     assertCharAppearsBeforeChar output 'c' 'b'
