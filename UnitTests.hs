@@ -53,6 +53,16 @@ testMultipleJobsSelfReferencingDependency = TestCase $ do
     let input = unlines [a,b,c]
     assertBool "Expected orderJobs to return Nothing" $ isNothing (orderJobs input)
 
+testMultipleJobsCircularDependencyChain = TestCase $ do
+    let a = "a =>"
+    let b = "b => c"
+    let c = "c => f"
+    let d = "d => a"
+    let e = "e =>"
+    let f = "f => b"
+    let input = unlines [a,b,c,d,e,f]
+    assertBool "Expected orderJobs to return Nothing" $ isNothing (orderJobs input)
+
 assertOutputContains actualOutput chars =
     let
         actualOutputLength = length actualOutput
@@ -85,7 +95,8 @@ tests = TestList [
         TestLabel "testMultipleJobs" testMultipleJobs,
         TestLabel "testMultipleJobsSingleDependency" testMultipleJobsSingleDependency,
         TestLabel "testMultipleJobsMultipleDependencies" testMultipleJobsMultipleDependencies,
-        TestLabel "testMultipleJobsSelfReferencingDependency" testMultipleJobsSelfReferencingDependency
+        TestLabel "testMultipleJobsSelfReferencingDependency" testMultipleJobsSelfReferencingDependency,
+        TestLabel "testMultipleJobsCircularDependencyChain" testMultipleJobsCircularDependencyChain
     ]
 
 main :: IO ()
