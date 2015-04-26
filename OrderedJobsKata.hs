@@ -8,7 +8,7 @@ orderJobs [] = Just []
 orderJobs s =
     if pairsContainCycle pairs
         then Nothing
-        else Just sortedletters
+        else Just orderedletters
     where
         jobLines = lines s
         jobLinesSplit = map (wordsBy (==' ')) jobLines
@@ -16,11 +16,11 @@ orderJobs s =
         listsOf3 = filter (\xs -> length xs == 3) jobLinesSplit
         singles = map head listsOf2
         pairs = map (\xs -> (head xs, last xs)) listsOf3
-        sortedPairs = sortPairs pairs
-        firstsOfSortedPairs = map fst sortedPairs
-        sortedletters = concat $ singles ++ firstsOfSortedPairs
+        orderedPairs = orderPairs pairs
+        firstsOfOrderedPairs = map fst orderedPairs
+        orderedletters = concat $ singles ++ firstsOfOrderedPairs
 
-sortPairs ps =
+orderPairs ps =
     loop ps []
     where
         loop [] acc = acc
