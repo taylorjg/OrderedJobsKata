@@ -1,8 +1,7 @@
 module OrderedJobsKata (orderJobs) where
 
-import Data.List.Split (wordsBy)
-import Data.List (sortBy, partition)
-import Text.Regex.Posix
+import Data.List (partition)
+import Text.Regex.Posix ((=~))
 
 data Job
     = Single { job :: String }
@@ -16,20 +15,19 @@ orderJobs input =
         else Just orderedLetters
     where
         jobLines = lines input
-        (singles, pairs) = parseJobLines jobLines
+        jobs = parseJobLines jobLines
+        (singles, pairs) = partition isSingleJob jobs
         orderedPairs = orderPairs pairs
         orderedLetters = concat $ map job (singles ++ orderedPairs)
-
-parseJobLines :: [String] -> ([Job], [Job])
-parseJobLines jobLines =
-    (singles, pairs)
-    where
-        css = map parseJobLine jobLines
-        jobs = makeJobs css
-        (singles, pairs) = partition isSingle jobs
-        isSingle job = case job of
+        isSingleJob job = case job of
             Single _ -> True
             _ -> False
+
+parseJobLines :: [String] -> [Job]
+parseJobLines jobLines =
+    makeJobs parsedJobLines
+    where
+        parsedJobLines = map parseJobLine jobLines
 
 parseJobLine :: String -> [String]
 parseJobLine jobLine = 
@@ -39,13 +37,13 @@ parseJobLine jobLine =
         (_, _, _, captures) = jobLine =~ jobPattern :: (String,String,String,[String])
 
 makeJobs :: [[String]] -> [Job]
-makeJobs css =
-    map makeJob css
+makeJobs parsedJobLines =
+    map makeJob parsedJobLines
     where
-        makeJob cs =
-            if (length cs == 1)
-                then Single (head cs)
-                else Pair (head cs) (last cs)
+        makeJob captures =
+            if (length captures == 1)
+                then Single (head captures)
+                else Pair (head captures) (last captures)
 
 orderPairs :: [Job] -> [Job]
 orderPairs ps =
