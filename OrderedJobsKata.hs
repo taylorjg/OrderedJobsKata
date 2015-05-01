@@ -2,6 +2,7 @@ module OrderedJobsKata (orderJobs) where
 
 import Data.List.Split (wordsBy)
 import Data.List (sortBy, partition)
+import Text.Regex.Posix
 
 data Job
     = Single { job :: String }
@@ -23,11 +24,28 @@ parseJobLines :: [String] -> ([Job], [Job])
 parseJobLines jobLines =
     (singles, pairs)
     where
-        jobLinesSplit = map (wordsBy (==' ')) jobLines
-        listsOf2 = filter (\xs -> length xs == 2) jobLinesSplit
-        listsOf3 = filter (\xs -> length xs == 3) jobLinesSplit
-        singles = map (Single . head) listsOf2
-        pairs = map (\xs -> Pair (head xs) (last xs)) listsOf3
+        css = map parseJobLine jobLines
+        jobs = makeJobs css
+        (singles, pairs) = partition isSingle jobs
+        isSingle job = case job of
+            Single _ -> True
+            _ -> False
+
+parseJobLine :: String -> [String]
+parseJobLine jobLine = 
+    captures
+    where
+        jobPattern = "([a-z])[ \t]*=>[ \t]*([a-z])?"
+        (_, _, _, captures) = jobLine =~ jobPattern :: (String,String,String,[String])
+
+makeJobs :: [[String]] -> [Job]
+makeJobs css =
+    map makeJob css
+    where
+        makeJob cs =
+            if (length cs == 1)
+                then Single (head cs)
+                else Pair (head cs) (last cs)
 
 orderPairs :: [Job] -> [Job]
 orderPairs ps =
